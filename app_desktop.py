@@ -462,10 +462,11 @@ def abrir_modificar():
         return None
 
     def guardar_cambios():
+        
         if not hasattr(ventana_modificar, "fila_actual"):
             messagebox.showwarning("Aviso", "Primero cargue el alumno con su DNI.", parent=ventana_modificar)
             return
-        dni = ventana_modificar.fila_actual[1]  # El DNI no se puede cambiar
+        dni = entrada_dni.get().strip()
         nombre = entradas["Nombre"].get().strip()
         apellido = entradas["Apellido"].get().strip()
         curso = curso_var.get()
@@ -476,6 +477,12 @@ def abrir_modificar():
 
         if not nombre or not apellido:
             messagebox.showwarning("Aviso", "Nombre y Apellido son obligatorios.", parent=ventana_modificar)
+            return
+        if not dni.isdigit():
+            messagebox.showwarning("Aviso", "El DNI debe ser numérico.", parent=ventana_modificar)
+            return
+        if estado in ["Egreso", "Abandono"] and not fecha_egreso:
+            messagebox.showwarning("Aviso", "La fecha de egreso es obligatoria para alumnos en estado 'Egreso' o 'Abandono'.", parent=ventana_modificar)
             return
         try:
             cursor.execute("""
